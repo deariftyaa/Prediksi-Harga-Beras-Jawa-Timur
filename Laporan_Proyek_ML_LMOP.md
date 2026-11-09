@@ -41,163 +41,118 @@ Laporan ini disusun mengikuti **ML Lifecycle** yang terdiri dari empat tahap ber
 ---
 
 ## 1. LEARNING OUTCOMES
+
 Pada proyek ini, mahasiswa diharapkan dapat:
-1. **[L]** Mengidentifikasi masalah nyata dari **ide sendiri** yang selaras dengan salah satu tujuan **SDGs** ([Agenda 2030 – sdgs.un.org/2030agenda](https://sdgs.un.org/2030agenda)), lalu merumuskan problem statement (target, objective, data) secara jelas
-2. **[L]** Melakukan analisis dan eksplorasi data (EDA) secara komprehensif (**OPSIONAL**)
-3. **[L]** Melakukan data preparation yang sesuai dengan karakteristik dataset
+1. **[L]** Mengidentifikasi masalah nyata dari **ide sendiri** yang selaras dengan salah satu tujuan **SDGs** ([Agenda 2030 – sdgs.un.org/2030agenda](https://sdgs.un.org/2030agenda)), lalu merumuskan problem statement (target, objective, data) secara jelas.
+2. **[L]** Melakukan analisis dan eksplorasi data (EDA) secara komprehensif (**OPSIONAL**).
+3. **[L]** Melakukan data preparation yang sesuai dengan karakteristik dataset.
 4. **[M]** Merancang tiga model machine learning dengan justifikasi hypothesis space dan inductive bias (**WAJIB**):
    - Model baseline
    - Model machine learning / advanced
    - Model deep learning (**WAJIB**)
-5. **[O]** Mengoptimasi model secara sistematis (loss function, optimizer, hyperparameter tuning, regularisasi)
-6. **[P]** Menggunakan metrik evaluasi yang relevan dengan jenis tugas ML dan menganalisis hasilnya
-7. Melaporkan hasil eksperimen secara ilmiah dan sistematis
-8. Mengunggah seluruh kode proyek ke GitHub (**WAJIB**)
-9. Menerapkan prinsip software engineering dalam pengembangan proyek
+5. **[O]** Mengoptimasi model secara sistematis (loss function, optimizer, hyperparameter tuning, regularisasi).
+6. **[P]** Menggunakan metrik evaluasi yang relevan dengan jenis tugas ML dan menganalisis hasilnya.
+7. Melaporkan hasil eksperimen secara ilmiah dan sistematis.
+8. Mengunggah seluruh kode proyek ke GitHub (**WAJIB**).
+9. Menerapkan prinsip software engineering dalam pengembangan proyek.
 
 ---
 
-## 2. PROJECT OVERVIEW  **[L]**
+## 2. PROJECT OVERVIEW  [L]
 
 ### 2.1 Latar Belakang
-**Isi bagian ini dengan:**
-- Mengapa proyek ini penting?
-- Permasalahan umum pada domain terkait (misal: kesehatan, pendidikan, keuangan, pertanian, NLP, computer vision, dll.)
-- Manfaat proyek untuk pengguna, bisnis, atau penelitian
-- Studi literatur atau referensi ilmiah (minimal 1–2 sumber wajib)
-- Keterkaitan masalah dengan SDGs yang dipilih (dijabarkan di Bab 2.2)
 
-**Contoh referensi (berformat APA/IEEE):**
-> Goodfellow, I., Bengio, Y., & Courville, A. (2016). *Deep Learning*. MIT Press.
+Beras merupakan komoditas pangan utama dan bahan pokok bagi mayoritas penduduk Indonesia, termasuk di Provinsi Jawa Timur yang dikenal sebagai salah satu lumbung beras nasional. Namun, menjelang Hari Besar Keagamaan Nasional (HBKN), khususnya Hari Raya Idul Fitri, dinamika harga beras di tingkat konsumen sering kali mengalami gejolak dan fluktuasi harga yang signifikan. Lonjakan harga ini dipicu oleh akumulasi beberapa faktor determinan, seperti lonjakan permintaan konsumen secara mendadak, perubahan pola distribusi logistik musiman, tren inflasi daerah, hingga keterbatasan pasokan akibat iklim cuaca yang memengaruhi jadwal panen.
 
-**[Jelaskan konteks dan latar belakang proyek]**
+Permasalahan fluktuasi harga komoditas pokok yang tidak terprediksi dengan cepat dapat menurunkan daya beli masyarakat secara drastis, khususnya pada lapisan ekonomi menengah ke bawah. Di tingkat makro, hal ini memicu stabilitas inflasi yang terganggu dan memperbesar risiko ketahanan pangan regional. Pemerintah daerah melalui Tim Pengendalian Inflasi Daerah (TPID) serta lembaga penyedia stok pangan seperti Perum BULOG memerlukan instrumen pendukung keputusan (*decision support system*) yang dapat memprediksi pergerakan harga beras secara presisi sebelum periode lonjakan terjadi.
+
+Penerapan teknologi Machine Learning dan Deep Learning dalam pemodelan *time-series forecasting* menawarkan solusi ilmiah untuk menangkap pola temporal kompleks, efek musiman (*seasonality*), dan hubungan non-linear antar variabel ekonomi-iklim. Dengan tersedianya alat prediksi berakurasi tinggi, pemangku kebijakan dapat mengambil langkah intervensi pasar dini—seperti operasi pasar murah atau penyaluran cadangan beras pemerintah—secara terukur dan tepat waktu sebelum lonjakan ekstrim memicu kepanikan di masyarakat (*panic buying*).
+
+**Referensi Ilmiah (Berformat APA):**
+1. Hochreiter, S., & Schmidhuber, J. (1997). Long short-term memory. *Neural Computation*, 9(8), 1735–1780. https://doi.org/10.1162/neco.1997.9.8.1735
+2. Chen, T., & Guestrin, C. (2016). XGBoost: A scalable tree boosting system. In *Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining* (pp. 785–794). https://doi.org/10.1145/2939672.2939785
+3. Badan Pusat Statistik & Bank Indonesia. (2023). *Laporan Panel Harga Pangan Nasional dan Analisis Pola Musiman Harga Komoditas Pokok Menjelang Hari Besar Keagamaan Nasional (HBKN)*. Jakarta: BI & BPS RI.
+
+---
 
 ### 2.2 Keterkaitan dengan SDGs (WAJIB)
 
-Ide proyek **berasal dari mahasiswa** dan harus selaras dengan **salah satu** dari 17 Sustainable Development Goals (daftar dan contoh inspirasi ada di Lampiran A).
+Ide proyek ini diinisiasi secara mandiri oleh mahasiswa dengan mengacu pada kerangka kerja pembangunan berkelanjutan global (*Sustainable Development Goals*).
 
 | Komponen | Pertanyaan Panduan | Jawaban Anda |
 |----------|--------------------|--------------|
-| **SDG yang dipilih** | Goal nomor berapa dan apa namanya? | [ ... ] |
-| **Target SDG** | Target (misal 3.4, 13.1) mana yang paling relevan? | [ ... ] |
-| **Masalah nyata** | Masalah konkret apa yang diangkat? Siapa yang terdampak? | [ ... ] |
-| **Peran ML** | Mengapa ML/DL cocok? Apa keputusan atau proses yang dibantu? | [ ... ] |
-| **Indikator kontribusi** | Bagaimana hasil model berkontribusi pada target SDG (langsung/tidak langsung)? | [ ... ] |
-| **Pertimbangan etika** | Risiko bias, privasi, atau dampak salah prediksi? | [ ... ] |
+| **SDG yang dipilih** | Goal nomor berapa dan apa namanya? | **SDG 2: Tanpa Kelaparan (Zero Hunger)** |
+| **Target SDG** | Target mana yang paling relevan? | **Target 2.c:** Mengadopsi langkah-langkah untuk menjamin berfungsinya pasar komoditas pangan serta memfasilitasi akses tepat waktu terhadap informasi pasar, termasuk cadangan pangan, guna membantu membatasi gejolak harga pangan yang ekstrem. |
+| **Masalah nyata** | Masalah konkret apa yang diangkat? Siapa yang terdampak? | Gejolak dan lonjakan harga beras di Jawa Timur menjelang Idul Fitri yang menurunkan daya beli masyarakat berpenghasilan rendah dan memicu ketidakstabilan inflasi daerah. |
+| **Peran ML** | Mengapa ML/DL cocok? Apa keputusan atau proses yang dibantu? | Pendekatan ML/DL mampu memodelkan ketergantungan sekuensial waktu jangka panjang (*long-term temporal dependencies*) dan variabel eksternal (hari libur/kalender keagamaan, iklim) yang tidak terstruktur secara linear. Hasil pemodelan membantu TPID dan BULOG dalam mengambil keputusan intervensi pasar secara preventif. |
+| **Indikator kontribusi** | Bagaimana hasil model berkontribusi pada target SDG? | Menyediakan sistem peringatan dini (*early warning mechanism*) berupa proyeksi harga beras 30–60 hari ke depan, yang berkontribusi secara langsung pada pengurangan volatilitas ekstrim harga pangan di tingkat regional. |
+| **Pertimbangan etika** | Risiko bias, privasi, atau dampak salah prediksi? | **Privasi:** Dataset menggunakan data publik agregat provinsi/kabupaten tanpa data individu.<br>**Dampak Prediksi:** Prediksi yang berlebihan (*overestimation*) berisiko memicu spekulasi pasar atau intervensi berlebihan. Oleh karena itu, model dilengkapi batas kepercayaan (*confidence margin*) agar interpretasi data tetap konfirmatif dan netral. |
 
-**Sumber ide:** [Jelaskan dari mana ide muncul: pengalaman pribadi, lingkungan sekitar, isu lokal/nasional, dll.]
-
-### 2.3 Ringkasan Alur Lifecycle Proyek
-Jelaskan dalam 1 paragraf pendek bagaimana proyek Anda melewati tahap L → M → O → P (dan iterasi apa yang direncanakan).
-
-**[Tulis ringkasan alur lifecycle proyek Anda]**
+**Sumber Ide:**  
+Ide proyek muncul dari pengamatan terhadap fenomena tahunan lonjakan harga kebutuhan pokok menjelang Idul Fitri di pasar-pasar tradisional Jawa Timur, serta dorongan untuk memanfaatkan keterbukaan data (*open data*) Bank Indonesia (PIHPS) dan BPS demi menghasilkan solusi teknologi nyata bagi stabilitas pangan lokal.
 
 ---
 
-## 3. BUSINESS UNDERSTANDING / PROBLEM UNDERSTANDING  **[L]**
+### 2.3 Ringkasan Alur Lifecycle Proyek
+
+Proyek ini dilaksanakan secara terstruktur melalui empat tahapan ML Lifecycle berulang (L → M → O → P). Pada tahap **Learning Problem [L]**, target pergerakan harga harian beras dirumuskan berdasarkan data deret waktu historis (2018–2025) beserta pembentukan fitur lag dan kalender Idul Fitri. Pada tahap **Model Design [M]**, dirancang tiga arsitektur model berskala gradual: SARIMAX (baseline linear time-series), XGBoost Regressor (advanced tree-based ML), dan LSTM/GRU (deep learning sequential network). Tahap **Optimization [O]** berfokus pada tuning hyperparameter, peminjaman struktur window data temporal, serta pencegahan overfitting dengan regularisasi (dropout dan early stopping). Hasil prediksi dievaluasi pada tahap **Predict & Evaluate [P]** menggunakan metrik RMSE, MAE, dan MAPE pada data *hold-out test set* menjelang Idul Fitri. Temuan galat evaluasi di tahap P selanjutnya digunakan sebagai sarana iterasi perbaikan terhadap rekayasa fitur di tahap L dan penyetelan ulang arsitektur di tahap M/O.
+
+---
+
+## 3. BUSINESS UNDERSTANDING / PROBLEM UNDERSTANDING  [L]
 
 ### 3.1 Problem Statements
-Tuliskan 2–4 pernyataan masalah yang jelas dan spesifik.
 
-**Contoh (universal):**
-1. Model perlu mampu memprediksi nilai target dengan akurasi tinggi
-2. Sistem harus dapat mengidentifikasi pola pada citra secara otomatis
-3. Dataset memiliki noise sehingga perlu preprocessing yang tepat
-4. Dibutuhkan model deep learning yang mampu belajar representasi fitur kompleks
+1. **Fluktuasi Harga Musiman:** Bagaimana merumuskan model prediksi yang mampu menangkap pola tren temporal dan lonjakan harga beras harian/mingguan di Jawa Timur secara akurat menjelang periode puncak Idul Fitri?
+2. **Kualitas & Karakteristik Data Time-Series:** Bagaimana mengolah data historis deret waktu harga beras yang memiliki ketidakberaturan pola kalender keagamaan (tahun Hijriah yang bergeser dalam kalender Masehi) agar siap dilatih oleh algoritma Machine Learning dan Deep Learning?
+3. **Komparasi Kinerja Arsitektur:** Sejauh mana efektivitas perbandingan antara model statistik linier konvensional (SARIMAX), model berbasis pohon ensemble (XGBoost), dan arsitektur recurrent neural network (LSTM/GRU) dalam meminimumkan persentase kesalahan prediksi (*error rate*) pada horizon waktu 30–60 hari?
 
-**[Tulis problem statements Anda di sini]**
+---
 
 ### 3.2 Formulasi Learning Problem (WAJIB)
 
-Rumuskan masalah dalam kerangka *Learning Problem*:
-
 | Komponen | Pertanyaan Panduan | Jawaban Anda |
 |----------|--------------------|--------------|
-| **Target** | Apa yang diprediksi? Jenis tugas (klasifikasi biner/multikelas, regresi, forecasting, clustering, dll.)? | [ ... ] |
-| **Objective** | Apa yang dioptimalkan/diminimalkan secara matematis (misal: cross-entropy, MSE)? Metrik keberhasilan utama? | [ ... ] |
-| **Data** | Sumber, ukuran, jenis, dan asumsi tentang data (i.i.d.? distribusi train vs test?) | [ ... ] |
+| **Target** | Apa yang diprediksi? Jenis tugas? | • **Target Prediksi ($y_t$):** Harga rerata beras kualitas medium/super di tingkat konsumen Jawa Timur (IDR/kg) pada waktu $t$.<br>• **Jenis Tugas ML:** *Time-Series Forecasting / Continuous Regression*. |
+| **Objective** | Apa yang dioptimalkan/diminimalkan secara matematis? Metrik utama? | • **Mathematical Objective:** Meminimalkan *Mean Squared Error* (MSE) / *Loss Function* antara harga aktual ($y_t$) dan harga hasil prediksi ($\hat{y}_t$) pada horizon waktu pengujian.<br>• **Metrik Evaluasi Utama:** Root Mean Squared Error (RMSE), Mean Absolute Error (MAE), dan Mean Absolute Percentage Error (MAPE). |
+| **Data** | Sumber, ukuran, jenis, dan asumsi data? | • **Sumber:** Pusat Informasi Harga Pangan Strategis (PIHPS) Nasional / Bank Indonesia & BPS Jawa Timur.<br>• **Ukuran Data:** Deret waktu harian/mingguan dari tahun 2018 hingga 2025 (sekitar 1.500–2.500 baris data temporal).<br>• **Tipe Data:** *Tabular Time-Series Data*.<br>• **Asumsi Data:** Data memiliki komponen tren, musiman (*seasonality*), dan tidak terdistribusi secara independent and identically distributed (i.i.d.) melainkan memiliki ketergantungan temporal (*autocorrelation*). Splitting dilakukan berbasis temporal (bukan random split) untuk mencegah data leakage. |
+
+---
 
 ### 3.3 Goals
 
-Tujuan harus spesifik, terukur, dan selaras dengan problem statement.
-**Contoh tujuan:**
-1. Membangun model ML untuk memprediksi variabel target dengan akurasi > 80%
-2. Mengukur performa tiga pendekatan model (baseline, advanced, deep learning)
-3. Menentukan model terbaik berdasarkan metrik evaluasi yang relevan
-4. Menghasilkan sistem yang dapat bekerja secara reproducible
-
-> Sertakan minimal satu goal yang menunjukkan kontribusi terhadap target SDG yang dipilih (Bab 2.2).
-
-**[Tulis goals Anda di sini]**
-
-### 3.4 Solution Approach  **[M]**
-
-Mahasiswa **WAJIB** menggunakan minimal **tiga model** dengan komposisi sebagai berikut:
-#### **Model 1 – Baseline Model**
-Model sederhana sebagai pembanding dasar.
-**Pilihan model:**
-- Linear Regression (untuk regresi)
-- Logistic Regression (untuk klasifikasi)
-- K-Nearest Neighbors (KNN)
-- Decision Tree
-- Naive Bayes
-
-**[Jelaskan model baseline yang Anda pilih dan alasannya]**
-
-#### **Model 2 – Advanced / ML Model**
-Model machine learning yang lebih kompleks.
-**Pilihan model:**
-- Random Forest
-- Gradient Boosting (XGBoost, LightGBM, CatBoost)
-- Support Vector Machine (SVM)
-- Ensemble methods
-- Clustering (K-Means, DBSCAN) - untuk unsupervised
-- PCA / dimensionality reduction (untuk preprocessing)
-
-**[Jelaskan model advanced yang Anda pilih dan alasannya]**
-
-#### **Model 3 – Deep Learning Model (WAJIB)**
-Model deep learning yang sesuai dengan jenis data.
-**Pilihan Implementasi (pilih salah satu sesuai dataset):**
-**A. Tabular Data:**
-- Multilayer Perceptron (MLP) / Neural Network
-- Minimum: 2 hidden layers
-- Contoh: prediksi harga, klasifikasi binary/multiclass
-
-**B. Image Data:**
-- CNN sederhana (minimum 2 convolutional layers) **ATAU**
-- Transfer Learning (ResNet, VGG, MobileNet, EfficientNet) - **recommended**
-- Contoh: klasifikasi gambar, object detection
-
-**C. Text Data:**
-- LSTM/GRU (minimum 1 layer) **ATAU**
-- Embedding + Dense layers **ATAU**
-- Pre-trained model (BERT, DistilBERT, Word2Vec)
-- Contoh: sentiment analysis, text classification
-
-**D. Time Series:**
-- LSTM/GRU untuk sequential prediction
-- Contoh: forecasting, anomaly detection
-
-**E. Recommender Systems:**
-- Neural Collaborative Filtering (NCF)
-- Autoencoder-based Collaborative Filtering
-- Deep Matrix Factorization
-
-**Minimum Requirements untuk Deep Learning:**
-- ✅ Model harus training minimal 10 epochs
-- ✅ Harus ada plot loss dan accuracy/metric per epoch
-- ✅ Harus ada hasil prediksi pada test set
-- ✅ Training time dicatat (untuk dokumentasi)
-
-**Tidak Diperbolehkan:**
-- ❌ Copy-paste kode tanpa pemahaman
-- ❌ Model tidak di-train (hanya define arsitektur)
-- ❌ Tidak ada evaluasi pada test set
-
-**[Jelaskan model deep learning yang Anda pilih dan alasannya]**
+1. **Akurasi Model Prediksi:** Membangun model machine learning dan deep learning yang mampu memprediksi harga beras harian di Jawa Timur dengan tingkat kesalahan persentase rata-rata (MAPE) di bawah 5% pada data pengujian test set.
+2. **Komparasi Arsitektur Multi-Model:** Menganalisis dan mengevaluasi keunggulan serta keterbatasan dari tiga kelompok model (*Baseline SARIMAX*, *Advanced XGBoost*, dan *Deep Learning LSTM*) dalam memodelkan lonjakan harga jelang hari raya.
+3. **Penanganan Variabel Temporal Khusus:** Menerapkan teknik *feature engineering* temporal yang presisi (termasuk variabel *lag*, *rolling mean*, dan indikator jarak H-minus/plus Idul Fitri) guna meningkatkan performa prediksi.
+4. **Kontribusi Pencapaian SDG 2 Target 2.c:** Menghasilkan prototype sistem perkiraan harga beras yang transparan dan *reproducible* untuk mendukung pengambilan keputusan preventif oleh pemangku kepentingan stabilisasi pangan di Jawa Timur.
 
 ---
+
+### 3.4 Solution Approach  [M]
+
+Dalam proyek ini, dilakukan eksperimen komparatif menggunakan tiga arsitektur model dengan karakteristik *hypothesis space* dan *inductive bias* yang berbeda:
+
+#### Model 1 – Baseline Model
+* **Model yang Dipilih:** **SARIMAX (Seasonal Autoregressive Integrated Moving Average with Exogenous Variables)**
+* **Alasan Pemilihan:**  
+  SARIMAX dipilih sebagai baseline karena merupakan standar baku dalam analisis deret waktu linier klasik. Model ini secara khusus dirancang untuk menangani data temporal yang memiliki tren (*differencing/I*), keterkaitan autoregresif (*AR*), komponen *moving average* (*MA*), serta faktor musiman berulang (*Seasonal*) dan variabel eksogenus tambahan (*X*, seperti dummy Idul Fitri). Evaluasi SARIMAX menjadi benchmark awal untuk mengukur sejauh mana model non-linear nantinya memberikan peningkatan performa.
+
+#### Model 2 – Advanced / ML Model
+* **Model yang Dipilih:** **XGBoost Regressor (Extreme Gradient Boosting)**
+* **Alasan Pemilihan:**  
+  XGBoost dipilih sebagai perwakilan model Machine Learning tingkat lanjut berbasis *ensemble decision trees*. XGBoost sangat efektif pada data tabular berakurasi tinggi, memiliki algoritma *tree-boosting* yang cepat, serta terbukti robust terhadap *outliers*. Dengan menyusun data deret waktu menjadi bentuk *supervised learning* melalui pembentukan fitur *lag* dan *rolling statistics*, XGBoost mampu menangkap interaksi non-linear yang rumit antara fitur kalender, tren sejarah harga, dan variabel eksogen tanpa memerlukan asumsi distribusi data yang ketat.
+
+#### Model 3 – Deep Learning Model (WAJIB)
+* **Model yang Dipilih:** **Long Short-Term Memory (LSTM) Neural Network**
+* **Kategori Implementasi:** D. Time Series (Sequential Prediction)
+* **Alasan Pemilihan:**  
+  LSTM merupakan varian dari *Recurrent Neural Network* (RNN) yang dirancang khusus untuk mengatasi masalah *vanishing gradient* pada data sekuensial berjarak panjang. Arsitektur LSTM memanfaatkan struktur *gate* internal (*input gate*, *forget gate*, dan *output gate*) serta *cell state* untuk mengingat atau melupakan informasi rentang waktu historis secara selektif. Hal ini membuat LSTM sangat ideal untuk mempelajari dinamika kompleks pergerakan harga beras dalam pola jangka panjang dan fluktuasi mendadak saat memasuki bulan Ramadan hingga Idul Fitri.
+
+**Minimum Requirements Compliance untuk Deep Learning:**
+- Model dilatih dengan jumlah *epoch* minimum $\ge 10$ epoch (direncanakan 50–100 epoch dengan *EarlyStopping*).
+- Menyajikan visualisasi kurva *training loss* vs *validation loss* per epoch.
+- Melakukan evaluasi dan prediksi langsung pada data *hold-out test set* temporal.
+- Mencatat dan melaporkan *training computation time* secara aktual.
 
 ## 4. DATA UNDERSTANDING  **[L]**
 ### 4.1 Informasi Dataset
