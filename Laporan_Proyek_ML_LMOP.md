@@ -1,21 +1,20 @@
----
 ## INFORMASI PROYEK
 
 **Judul Proyek:**  
-[(Contoh: "Klasifikasi Penyakit Daun Menggunakan CNN", "Prediksi Harga Rumah dengan Machine Learning", "Analisis Sentimen Ulasan Produk")]
+Prediksi Harga Beras Menjelang Hari Raya Idul Fitri di Jawa Timur Menggunakan Machine Learning dan Deep Learning
 
-**Nama Mahasiswa:** 1. Riza Hanafi
-                    2. Dea Riftia
-**NIM:** 244311026
-         244311008
-**Program Studi:** Teknologi Rekayasa Perangkat Lunak  
+**Nama Mahasiswa - NIM:** 
+1. Riza Hanafi - 244311026
+2. Dea Riftya A. - 244311008
+
+**Program Studi:** D4 Teknologi Rekayasa Perangkat Lunak  
 **Mata Kuliah:** Data Science  
-**Dosen Pengampu:** Gus Nanang Syaifudiin S.Kom.,M.Kom.
-**Tahun Akademik:** 2026/5 
+**Dosen Pengampu:** Gus Nanang Syaifuddiin S.Kom., M.Kom.<br>
+**Tahun Akademik:** 2026/2027 <br>
 **Link GitHub Repository:** https://github.com/deariftyaa/Prediksi-Harga-Beras-Jawa-Timur  
 **Link Video Pembahasan:** [URL Video (YouTube/Drive)]  
-**SDG yang Dipilih:** SDG 2 : Tanpa Kelaparan (Zero Hunger)
-**Target SDG yang Relevan:** Target 2.c: Mengadopsi langkah-langkah untuk menjamin berfungsinya pasar komoditas pangan serta memfasilitasi akses tepat waktu terhadap informasi pasar, termasuk cadangan pangan, guna membantu membatasi gejolak harga pangan yang ekstrem.
+**SDG yang Dipilih:** SDG 2 - Tanpa Kelaparan (Zero Hunger)<br>
+**Target SDG yang Relevan:** Target 2.c - Mengambil langkah-langkah untuk menjamin berfungsinya pasar komoditas pangan serta memfasilitasi akses tepat waktu terhadap informasi pasar, termasuk cadangan pangan, untuk membantu membatasi gejolak harga pangan yang ekstrem.
 
 ---
 
@@ -82,7 +81,7 @@ Ide proyek ini diinisiasi secara mandiri oleh mahasiswa dengan mengacu pada kera
 | Komponen | Pertanyaan Panduan | Jawaban Anda |
 |----------|--------------------|--------------|
 | **SDG yang dipilih** | Goal nomor berapa dan apa namanya? | **SDG 2: Tanpa Kelaparan (Zero Hunger)** |
-| **Target SDG** | Target mana yang paling relevan? | **Target 2.c:** Mengadopsi langkah-langkah untuk menjamin berfungsinya pasar komoditas pangan serta memfasilitasi akses tepat waktu terhadap informasi pasar, termasuk cadangan pangan, guna membantu membatasi gejolak harga pangan yang ekstrem. |
+| **Target SDG** | Target mana yang paling relevan? | **Target 2.c:** Mengambil langkah-langkah untuk menjamin berfungsinya pasar komoditas pangan serta memfasilitasi akses tepat waktu terhadap informasi pasar, termasuk cadangan pangan, untuk membantu membatasi gejolak harga pangan yang ekstrem. |
 | **Masalah nyata** | Masalah konkret apa yang diangkat? Siapa yang terdampak? | Gejolak dan lonjakan harga beras di Jawa Timur menjelang Idul Fitri yang menurunkan daya beli masyarakat berpenghasilan rendah dan memicu ketidakstabilan inflasi daerah. |
 | **Peran ML** | Mengapa ML/DL cocok? Apa keputusan atau proses yang dibantu? | Pendekatan ML/DL mampu memodelkan ketergantungan sekuensial waktu jangka panjang (*long-term temporal dependencies*) dan variabel eksternal (hari libur/kalender keagamaan, iklim) yang tidak terstruktur secara linear. Hasil pemodelan membantu TPID dan BULOG dalam mengambil keputusan intervensi pasar secara preventif. |
 | **Indikator kontribusi** | Bagaimana hasil model berkontribusi pada target SDG? | Menyediakan sistem peringatan dini (*early warning mechanism*) berupa proyeksi harga beras 30–60 hari ke depan, yang berkontribusi secara langsung pada pengurangan volatilitas ekstrim harga pangan di tingkat regional. |
@@ -122,8 +121,8 @@ Proyek ini dilaksanakan secara terstruktur melalui empat tahapan ML Lifecycle be
 ### 3.3 Goals
 
 1. **Akurasi Model Prediksi:** Membangun model machine learning dan deep learning yang mampu memprediksi harga beras harian di Jawa Timur dengan tingkat kesalahan persentase rata-rata (MAPE) di bawah 5% pada data pengujian test set.
-2. **Komparasi Arsitektur Multi-Model:** Menganalisis dan mengevaluasi keunggulan serta keterbatasan dari tiga kelompok model (*Baseline SARIMAX*, *Advanced XGBoost*, dan *Deep Learning LSTM*) dalam memodelkan lonjakan harga jelang hari raya.
-3. **Penanganan Variabel Temporal Khusus:** Menerapkan teknik *feature engineering* temporal yang presisi (termasuk variabel *lag*, *rolling mean*, dan indikator jarak H-minus/plus Idul Fitri) guna meningkatkan performa prediksi.
+2. **Komparasi Arsitektur Multi-Model:** Menganalisis dan mengevaluasi keunggulan serta keterbatasan dari tiga kelompok model (*Baseline SARIMAX*, *Advanced XGBoost*, dan *Deep Learning LSTM*) dalam memodelkan lonjakan harga menjelang hari raya.
+3. **Penanganan Variabel Temporal Khusus:** Menerapkan teknik *feature engineering* temporal yang presisi (termasuk variabel *lag*, *rolling mean*, dan indikator jarak H-minus/plus Idul Fitri) untuk meningkatkan performa prediksi.
 4. **Kontribusi Pencapaian SDG 2 Target 2.c:** Menghasilkan prototype sistem perkiraan harga beras yang transparan dan *reproducible* untuk mendukung pengambilan keputusan preventif oleh pemangku kepentingan stabilisasi pangan di Jawa Timur.
 
 ---
