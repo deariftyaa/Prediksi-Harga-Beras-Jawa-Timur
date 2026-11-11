@@ -1,7 +1,7 @@
 ## INFORMASI PROYEK
 
 **Judul Proyek:**  
-Prediksi Harga Beras Menjelang Hari Raya Idul Fitri di Jawa Timur Menggunakan Machine Learning dan Deep Learning
+Prediksi Harga Beras di Jawa Timur Menggunakan Pendekatan Time Series
 
 **Nama Mahasiswa - NIM:** 
 1. Riza Hanafi - 244311026
