@@ -156,83 +156,56 @@ Dalam proyek ini, dilakukan eksperimen komparatif menggunakan tiga arsitektur mo
 ## 4. DATA UNDERSTANDING  **[L]**
 ### 4.1 Informasi Dataset
 **Sumber Dataset:**  
-[Sebutkan sumber: Kaggle, UCI ML Repository, atau sumber lain dengan URL]
+Pusat Informasi Harga Pangan Strategis Nasional (PIHPS Nasional) — Bank Indonesia, wilayah Provinsi Jawa Timur (URL: https://www.bi.go.id/hargapangan). Dataset diunduh secara terpisah per tahun dari tahun 2020 hingga 2026 (`2020.xlsx` s.d. `2026.xlsx`) dengan rentang pencatatan 1 Januari 2020 hingga 30 Oktober 2026 (hari kerja Senin–Jumat).
 
 **Deskripsi Dataset:**
-- Jumlah baris (rows): [angka]
-- Jumlah kolom (columns/features): [angka]
-- Tipe data: [Tabular / Image / Text / Time Series / Audio / Video]
-- Ukuran dataset: [MB/GB]
-- Format file: [CSV / JSON / Images / TXT / etc.]
+- Jumlah baris (rows): 1.783 baris observasi harian (setelah penggabungan dan transformasi dari *wide format* ke *long format*)
+- Jumlah kolom (columns/features): 3 kolom utama (`tanggal`, `harga_beras`, `harga_beras_medium1`)
+- Tipe data: Time Series (Tabular Deret Waktu)
+- Ukuran dataset: 58,72 KB (0,057 MB) untuk 7 berkas Excel mentah
+- Format file: XLSX (`.xlsx`) pada sumber mentah, dan CSV (`.csv`) setelah penggabungan
 
 ### 4.2 Deskripsi Fitur
-Jelaskan setiap fitur/kolom yang ada dalam dataset.
-**Contoh tabel:**
 | Nama Fitur | Tipe Data | Deskripsi | Contoh Nilai |
 |------------|-----------|-----------|--------------|
-| id | Integer | ID unik data | 1, 2, 3 |
-| age | Integer | Usia (tahun) | 25, 30, 45 |
-| income | Float | Pendapatan (juta) | 5.5, 10.2 |
-| category | Categorical | Kategori produk | A, B, C |
-| text | String | Teks ulasan | "Produk bagus..." |
-| image | Image | Citra 224x224 RGB | Array 224x224x3 |
-| label | Categorical | Label target | 0, 1 atau "positif", "negatif" |
-
-**[Buat tabel deskripsi fitur Anda di sini]**
+| tanggal | Datetime (`datetime64[ns]`) | Tanggal pencatatan harga pasar harian komoditas di Provinsi Jawa Timur (hari kerja Senin–Jumat). | `2020-01-01`, `2024-02-26`, `2026-10-30` |
+| harga_beras | Float (`float64`) | **Variabel Target ($y$):** Harga rata-rata komoditas Beras di Provinsi Jawa Timur (dalam satuan Rupiah/kg). | `8700.0`, `12100.0`, `14450.0` |
+| harga_beras_medium1 | Float (`float64`) | Harga rata-rata komoditas Beras Kualitas Medium I di Provinsi Jawa Timur (dalam satuan Rupiah/kg), memiliki korelasi sangat tinggi ($r = 0,9995$) dengan variabel target. | `8500.0`, `12050.0`, `14450.0` |
 
 ### 4.3 Kondisi Data
 
-Jelaskan kondisi dan permasalahan data:
+- **Missing Values:** Ada, sebanyak 1 baris observasi (0,056% dari total 1.783 baris), yaitu pada tanggal `2022-02-28` yang tercatat sebagai karakter `'-'` karena bertepatan dengan hari libur nasional Isra Mikraj.
+- **Duplicate Data:** Tidak ada (0 baris duplikat pada indeks tanggal setelah penggabungan seluruh 7 berkas tahunan).
+- **Outliers:** Tidak ada outlier ekstrem berdasarkan metode *Interquartile Range* (IQR). Dengan $Q_1 = \text{Rp}8.600$, $Q_3 = \text{Rp}12.050$, dan $\text{IQR} = \text{Rp}3.450$, batas bawah berada pada $\text{Rp}3.425$ dan batas atas pada $\text{Rp}17.225$, sedangkan seluruh nilai berada pada rentang $\text{Rp}7.700\text{–Rp}14.450$.
+- **Imbalanced Data:** Tidak berlaku, karena permasalahan ini merupakan regresi deret waktu (*time series forecasting*) dengan target numerik kontinu, bukan klasifikasi kelas diskrit.
+- **Noise:** Ditemukan pola *step-change* (lonjakan perubahan harga harian yang tajam namun tetap stabil di level baru) yang sering muncul di sekitar tanggal 25 setiap bulannya pada pencatatan PIHPS (misalnya lonjakan $+\text{Rp}1.900$ pada `2024-02-26` dan penurunan $-\text{Rp}2.050$ pada `2024-04-25`).
+- **Data Quality Issues:** Pada berkas mentah `.xlsx`, tanggal tersimpan sebagai header kolom (*wide format*) dan nilai harga bertipe teks (*string*) dengan pemisah ribuan tanda koma (contoh: `'8,700'`), sehingga memerlukan proses *unpivoting* dan konversi tipe data numerik.
+- **Asumsi Data (i.i.d., distribusi train-test, potensi data leakage):** Data deret waktu melanggar asumsi *independent and identically distributed* (i.i.d.) karena terdapat autokorelasi temporal yang kuat antar hari. Selain itu, terjadi pergeseran distribusi (*distribution shift*) di mana rata-rata harga tahun 2020–2022 berkisar di $\text{Rp}8.078\text{–Rp}8.738/\text{kg}$, sedangkan pada 2023–2026 meningkat ke level $\text{Rp}10.540\text{–Rp}12.968/\text{kg}$. Potensi *data leakage* muncul jika pembagian data dilakukan secara acak (*random split*), fitting *scaler* dilakukan sebelum *splitting*, atau fitur `harga_beras_medium1` pada hari-$t$ dipakai langsung tanpa *lag* untuk memprediksi `harga_beras` pada hari-$t$.
 
-- **Missing Values:** [Ada/Tidak, berapa persen?]
-- **Duplicate Data:** [Ada/Tidak, berapa banyak?]
-- **Outliers:** [Ada/Tidak, pada fitur apa?]
-- **Imbalanced Data:** [Ada/Tidak, rasio kelas?]
-- **Noise:** [Jelaskan jika ada]
-- **Data Quality Issues:** [Jelaskan jika ada masalah lain]
-- **Asumsi Data (i.i.d., distribusi train-test, potensi data leakage):** [Jelaskan]
+### 4.4 Exploratory Data Analysis (EDA)
 
-### 4.4 Exploratory Data Analysis (EDA) - (**OPSIONAL**)
-
-**Requirement:** Minimal 3 visualisasi yang bermakna dan insight-nya.
-**Contoh jenis visualisasi yang dapat digunakan:**
-- Histogram (distribusi data)
-- Boxplot (deteksi outliers)
-- Heatmap korelasi (hubungan antar fitur)
-- Bar plot (distribusi kategori)
-- Scatter plot (hubungan 2 variabel)
-- Wordcloud (untuk text data)
-- Sample images (untuk image data)
-- Time series plot (untuk temporal data)
-- Confusion matrix heatmap
-- Class distribution plot
-
-
-#### Visualisasi 1: [Judul Visualisasi]
-[Insert gambar/plot]
+#### Visualisasi 1: Tren Harga Beras Harian di Jawa Timur (2020–2026)
+![Tren Harga Beras Harian](assets/eda_1_tren_harian.png)
 
 **Insight:**  
-[Jelaskan apa yang dapat dipelajari dari visualisasi ini]
+Harga beras di Jawa Timur cenderung stabil rendah sepanjang tahun 2020 hingga pertengahan 2022 di kisaran $\text{Rp}7.700\text{–Rp}9.000/\text{kg}$. Namun, mulai akhir 2022 hingga awal 2024 terjadi tren kenaikan struktural (*structural break*) yang tajam hingga mencapai titik puncak tertinggi sebesar $\text{Rp}14.450/\text{kg}$ pada akhir Februari 2024 menjelang bulan Ramadan, sebelum akhirnya terkoreksi dan stabil pada kisaran baru $\text{Rp}11.300\text{–Rp}13.450/\text{kg}$ pada periode 2024–2026.
 
-#### Visualisasi 2: [Judul Visualisasi]
-
-[Insert gambar/plot]
-
-**Insight:**  
-[Jelaskan apa yang dapat dipelajari dari visualisasi ini]
-
-#### Visualisasi 3: [Judul Visualisasi]
-
-[Insert gambar/plot]
+#### Visualisasi 2: Boxplot Distribusi Harga Beras per Tahun
+![Boxplot Harga Beras per Tahun](assets/eda_2_boxplot_tahunan.png)
 
 **Insight:**  
-[Jelaskan apa yang dapat dipelajari dari visualisasi ini]
+Sebaran harga antar tahun menunjukkan perubahan varians yang signifikan. Tahun 2020 memiliki rentang harga paling sempit ($\text{std} = \text{Rp}131,12$), sementara tahun 2023 ($\text{std} = \text{Rp}842,76$) dan 2024 ($\text{std} = \text{Rp}901,53$) memiliki rentang interkuartil paling lebar akibat tingginya volatilitas pasokan beras nasional. Tidak ditemukan titik pencilan ekstrem di luar batas whisker IQR pada masing-masing tahun.
+
+#### Visualisasi 3: Perbandingan Pola Musiman Harga Beras Bulanan Antar Tahun
+![Pola Musiman Harga Beras Bulanan](assets/eda_3_pola_musiman_bulanan.png)
+
+**Insight:**  
+Secara musiman, kenaikan harga beras konsisten terjadi pada kuartal pertama (Januari–Maret/April) yang bertepatan dengan periode pra-panen raya serta meningkatnya permintaan masyarakat menjelang bulan Ramadan dan Hari Raya Idul Fitri. Setelah melewati puncak periode Idul Fitri (April–Juni), harga cenderung melandai atau terkoreksi seiring masuknya masa panen raya di sentra produksi Jawa Timur.
 
 ---
 
 ## 5. DATA PREPARATION  **[L]**
 
-Bagian ini menjelaskan **semua** proses transformasi dan preprocessing data yang dilakukan.
 ### 5.1 Data Cleaning
 **Aktivitas:**
 - Handling missing values
@@ -250,41 +223,15 @@ Missing Values:
 **[Jelaskan langkah-langkah data cleaning yang Anda lakukan]**
 
 ### 5.2 Feature Engineering
-**Aktivitas:**
-- Creating new features
-- Feature extraction
-- Feature selection
-- Dimensionality reduction
-
-**[Jelaskan feature engineering yang Anda lakukan]**
+- **Pembuatan Fitur Autoregressive (*Lag Features*):** Membentuk fitur `lag_1`, `lag_3`, `lag_7`, `lag_14`, dan `lag_30` dari variabel target `harga_beras`, serta `lag_1_med1` dari `harga_beras_medium1`. Seluruh fitur menggunakan nilai masa lalu ($\ge t-1$) agar tidak terjadi *data leakage* saat memprediksi hari-$t$.
+- **Pembuatan Fitur Kalender & Musiman Idul Fitri:** Mengekstrak fitur `bulan` (1–12), `hari_dalam_minggu` (0–4), `hari_dalam_bulan` (1–31, untuk menangkap pola penyesuaian harga sekitar tanggal 25), serta fitur biner `is_periode_lebaran` (bernilai `1` pada rentang H-30 hingga H+7 tanggal Idul Fitri tahun 2020–2026, dan `0` di luar periode tersebut).
+- **Pembersihan Baris Awal (*Trimming*):** Menghapus 30 baris observasi paling awal (`2020-01-01` s.d. `2020-02-11`) yang mengandung nilai `NaN` akibat pergeseran `lag_30`, sehingga tersisa **1.753 baris** data bersih siap pakai.
 
 ### 5.3 Data Transformation
 
-**Untuk Data Tabular:**
-- Encoding (Label Encoding, One-Hot Encoding, Ordinal Encoding)
-- Scaling (Standardization, Normalization, MinMaxScaler)
-
-**Untuk Data Text:**
-- Tokenization
-- Lowercasing
-- Removing punctuation/stopwords
-- Stemming/Lemmatization
-- Padding sequences
-- Word embedding (Word2Vec, GloVe, fastText)
-
-**Untuk Data Image:**
-- Resizing
-- Normalization (pixel values 0-1 atau -1 to 1)
-- Data augmentation (rotation, flip, zoom, brightness, etc.)
-- Color space conversion
-
-**Untuk Time Series:**
-- Creating time windows
-- Lag features
-- Rolling statistics
-- Differencing
-
-**[Jelaskan transformasi yang Anda lakukan]**
+- **Lag Features & Rolling Statistics:** Selain *lag* harian, dihitung statistik bergerak (*rolling window*) berbasis `harga_beras.shift(1)` berupa rata-rata bergerak 7 hari (`rolling_mean_7`), standar deviasi 7 hari (`rolling_std_7`), dan rata-rata bergerak 30 hari (`rolling_mean_30`) untuk menangkap tren jangka pendek dan jangka menengah.
+- **Scaling (`MinMaxScaler`):** Seluruh 13 fitur numerik dan variabel target diskalakan ke rentang $[0, 1]$ menggunakan `MinMaxScaler`. Proses `fit()` dilakukan **secara eksklusif hanya pada data training** (`train_df`), kemudian parameternya diterapkan (`transform()`) pada `val_df` dan `test_df` untuk menjamin kestabilan konvergensi gradien pada model *Linear Regression* dan *Deep Learning* (LSTM) tanpa *data leakage*.
+- **Time Windows (Untuk Deep Learning):** Pada pemodelan sekuensial (LSTM), data tabular yang telah diskalakan akan dibentuk menjadi tensor 3 dimensi `(samples, time_steps, features)` dengan jendela waktu (*lookback window*) $T = 14$ hari kerja terakhir untuk memprediksi harga pada hari berikutnya.
 
 ### 5.4 Data Splitting
 
