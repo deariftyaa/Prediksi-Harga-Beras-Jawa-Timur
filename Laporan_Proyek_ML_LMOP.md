@@ -253,16 +253,9 @@ Duplicate Data & Outliers:
 
 **Strategi pembagian data:**
 ```
-- Training set: [X]% ([jumlah] samples)
-- Validation set: [X]% ([jumlah] samples) - jika ada
-- Test set: [X]% ([jumlah] samples)
-```
-**Contoh:**
-```
-Menggunakan stratified split untuk mempertahankan distribusi kelas:
-- Training: 80% (8000 samples)
-- Test: 20% (2000 samples)
-- Random state: 42 untuk reproducibility
+- Training set: 70% (1.227 samples) -> periode 2020-02-12 s.d. 2024-10-11
+- Validation set: 15% (263 samples) -> periode 2024-10-14 s.d. 2025-10-21
+- Test set: 15% (263 samples) -> periode 2025-10-22 s.d. 2026-10-30
 ```
 
 > **Penting:** Test set hanya digunakan **sekali** pada tahap P (evaluasi akhir). Tuning pada tahap O hanya boleh memakai validation set / cross-validation. Fit scaler/encoder hanya pada data training untuk menghindari data leakage.
