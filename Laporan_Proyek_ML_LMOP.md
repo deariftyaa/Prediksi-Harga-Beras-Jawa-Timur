@@ -221,6 +221,22 @@ Missing Values:
 ```
 
 **[Jelaskan langkah-langkah data cleaning yang Anda lakukan]**
+Restrukturisasi Tabel (Unpivoting):
+- Kondisi awal: 7 berkas Excel berformat wide (tanggal sebagai kolom)
+- Strategi: Melakukan iterasi kolom tanggal pada setiap berkas dan menggabungkannya secara kronologis (long format)
+- Alasan: Model time series dan supervised regression membutuhkan struktur observasi vertikal yang terurut berdasarkan waktu
+Konversi Tipe Data:
+- Kondisi awal: Kolom harga bertipe object/string dengan tanda koma ribuan (contoh: '8,700')
+- Strategi: Menghapus karakter koma (',') dan mengonversi nilai ke tipe float64
+- Alasan: Operasi matematis, perhitungan statistik, dan algoritma ML membutuhkan representasi numerik kontinu
+Missing Values:
+- Kondisi awal: Fitur 'harga_beras' dan 'harga_beras_medium1' memiliki 1 missing value (0,056%) pada tanggal 2022-02-28 (berisi '-')
+- Strategi: Imputasi menggunakan metode Forward Fill (ffill) dari nilai hari kerja sebelumnya (2022-02-25)
+- Alasan: Pada hari libur pasar, harga acuan mengikuti harga penutupan hari bursa terakhir dan ffill mencegah kebocoran informasi dari masa depan (no data leakage)
+Duplicate Data & Outliers:
+- Kondisi awal: Ditemukan 0 duplikat tanggal dan 0 outlier ekstrem berdasarkan uji IQR
+- Strategi: Tidak dilakukan penghapusan baris outlier
+- Alasan: Lonjakan harga pada awal tahun 2024 merupakan dinamika pasar nyata menjelang Idul Fitri yang justru harus dipelajari oleh model
 
 ### 5.2 Feature Engineering
 - **Pembuatan Fitur Autoregressive (*Lag Features*):** Membentuk fitur `lag_1`, `lag_3`, `lag_7`, `lag_14`, dan `lag_30` dari variabel target `harga_beras`, serta `lag_1_med1` dari `harga_beras_medium1`. Seluruh fitur menggunakan nilai masa lalu ($\ge t-1$) agar tidak terjadi *data leakage* saat memprediksi hari-$t$.
