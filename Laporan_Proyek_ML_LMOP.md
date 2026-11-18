@@ -256,30 +256,28 @@ Duplicate Data & Outliers:
 - Training set: 70% (1.227 samples) -> periode 2020-02-12 s.d. 2024-10-11
 - Validation set: 15% (263 samples) -> periode 2024-10-14 s.d. 2025-10-21
 - Test set: 15% (263 samples) -> periode 2025-10-22 s.d. 2026-10-30
+
+Karena dataset merupakan data deret waktu (*time series*), pembagian data dilakukan menggunakan **Chronological Split** secara berurutan tanpa pengacakan (`shuffle=False`). Pengacakan data pada *time series* akan menyebabkan kebocoran informasi masa depan ke masa lalu (*look-ahead bias*). Pembagian 70% : 15% : 15% memastikan bahwa:
+1. **Training set** mencakup 5 siklus penuh Ramadan/Idul Fitri (2020–2024) serta fase *structural break* kenaikan harga beras.
+2. **Validation set** mencakup siklus penuh Idul Fitri tahun 2025 untuk evaluasi model awal dan *hyperparameter tuning*.
+3. **Test set** mencakup siklus penuh Idul Fitri tahun 2026 dan disimpan terpisah (*untouched*) hingga tahap evaluasi akhir di Minggu 6.
 ```
 
 > **Penting:** Test set hanya digunakan **sekali** pada tahap P (evaluasi akhir). Tuning pada tahap O hanya boleh memakai validation set / cross-validation. Fit scaler/encoder hanya pada data training untuk menghindari data leakage.
 
 **[Jelaskan strategi splitting Anda dan alasannya]**
 
-### 5.5 Data Balancing (jika diperlukan)
-**Teknik yang digunakan:**
-- SMOTE (Synthetic Minority Over-sampling Technique)
-- Random Undersampling
-- Class weights
-- Ensemble sampling
-
-**[Jelaskan jika Anda melakukan data balancing]**
+### 5.5 Data Balancing
+Tidak dilakukan teknik *data balancing* (seperti SMOTE maupun *undersampling*) karena permasalahan ini merupakan tugas **regresi kontinu** (*time series forecasting*) untuk memprediksi besaran harga dalam Rupiah, bukan tugas klasifikasi yang memiliki ketidakseimbangan kelas kategorikal.
 
 ### 5.6 Ringkasan Data Preparation
 
-**Per langkah, jelaskan:**
-1. **Apa** yang dilakukan
-**[Jelaskan ]**
-2. **Mengapa** penting
-**[Jelaskan Mengapa ?]**
-3. **Bagaimana** implementasinya
-**[Jelaskan Bagaimana]**
+1. **Apa yang dilakukan:**
+   Melakukan penggabungan 7 berkas Excel tahunan menjadi format *long table* kronologis, membersihkan pemisah koma ribuan menjadi `float64`, mengimputasi 1 nilai kosong dengan *forward fill*, membentuk 13 fitur rekayasa waktu (*lag*, *rolling statistics*, kalender, dan penanda periode Idul Fitri), membagi data secara kronologis (70% Train, 15% Validation, 15% Test), serta menormalisasi fitur ke rentang $[0, 1]$ menggunakan `MinMaxScaler`.
+2. **Mengapa penting:**
+   Data mentah PIHPS berformat *wide* dan bertipe string sehingga tidak dapat langsung diproses oleh algoritma pembelajaran mesin. Pembuatan fitur *lag* dan *rolling window* memberikan konteks historis dan musiman Idul Fitri bagi model tabular, sementara *chronological split* dan *fitting scaler* eksklusif pada *training set* mencegah terjadinya *data leakage* agar evaluasi performa model benar-benar mencerminkan kondisi peramalan di dunia nyata.
+3. **Bagaimana implementasinya:**
+   Seluruh pipeline diimplementasikan secara terstruktur dan *reproducible* menggunakan pustaka `pandas`, `numpy`, dan `scikit-learn` (`MinMaxScaler`) di dalam notebook `01_learning_problem_eda.ipynb` dan `02_data_preparation.ipynb`. Hasil akhir disimpan ke dalam berkas terpisah (`train.csv`, `val.csv`, `test.csv`, dan `scalers.pkl`) agar konsisten digunakan pada tahap pemodelan berikutnya.
 
 ---
 
