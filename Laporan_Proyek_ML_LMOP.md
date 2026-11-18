@@ -214,12 +214,6 @@ Secara musiman, kenaikan harga beras konsisten terjadi pada kuartal pertama (Jan
 - Data type conversion
 **Contoh:**
 ```
-Missing Values:
-- Fitur 'age' memiliki 50 missing values (5% dari data)
-- Strategi: Imputasi dengan median karena distribusi skewed
-- Alasan: Median lebih robust terhadap outliers dibanding mean
-```
-
 **[Jelaskan langkah-langkah data cleaning yang Anda lakukan]**
 Restrukturisasi Tabel (Unpivoting):
 - Kondisi awal: 7 berkas Excel berformat wide (tanggal sebagai kolom)
@@ -237,6 +231,7 @@ Duplicate Data & Outliers:
 - Kondisi awal: Ditemukan 0 duplikat tanggal dan 0 outlier ekstrem berdasarkan uji IQR
 - Strategi: Tidak dilakukan penghapusan baris outlier
 - Alasan: Lonjakan harga pada awal tahun 2024 merupakan dinamika pasar nyata menjelang Idul Fitri yang justru harus dipelajari oleh model
+```
 
 ### 5.2 Feature Engineering
 - **Pembuatan Fitur Autoregressive (*Lag Features*):** Membentuk fitur `lag_1`, `lag_3`, `lag_7`, `lag_14`, dan `lag_30` dari variabel target `harga_beras`, serta `lag_1_med1` dari `harga_beras_medium1`. Seluruh fitur menggunakan nilai masa lalu ($\ge t-1$) agar tidak terjadi *data leakage* saat memprediksi hari-$t$.
