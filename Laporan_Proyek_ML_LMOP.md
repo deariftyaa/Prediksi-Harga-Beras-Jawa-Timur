@@ -174,7 +174,7 @@ Pusat Informasi Harga Pangan Strategis Nasional (PIHPS Nasional) — Bank Indone
 
 ### 4.3 Kondisi Data
 
-- **Missing Values:** Ada, sebanyak 1 baris observasi (0,056% dari total 1.783 baris), yaitu pada tanggal `2022-02-28` yang tercatat sebagai karakter `'-'` karena bertepatan dengan hari libur nasional Isra Mikraj.
+- **Missing Values:** Ada, sebanyak 1 baris observasi (0,056% dari total 1.783 baris), yaitu pada tanggal `2022-02-28` yang tercatat sebagai karakter `'-'` karena bertepatan dengan hari libur nasional.
 - **Duplicate Data:** Tidak ada (0 baris duplikat pada indeks tanggal setelah penggabungan seluruh 7 berkas tahunan).
 - **Outliers:** Tidak ada outlier ekstrem berdasarkan metode *Interquartile Range* (IQR). Dengan $Q_1 = \text{Rp}8.600$, $Q_3 = \text{Rp}12.050$, dan $\text{IQR} = \text{Rp}3.450$, batas bawah berada pada $\text{Rp}3.425$ dan batas atas pada $\text{Rp}17.225$, sedangkan seluruh nilai berada pada rentang $\text{Rp}7.700\text{–Rp}14.450$.
 - **Imbalanced Data:** Tidak berlaku, karena permasalahan ini merupakan regresi deret waktu (*time series forecasting*) dengan target numerik kontinu, bukan klasifikasi kelas diskrit.
@@ -188,7 +188,7 @@ Pusat Informasi Harga Pangan Strategis Nasional (PIHPS Nasional) — Bank Indone
 ![Tren Harga Beras Harian](assets/eda_1_tren_harian.png)
 
 **Insight:**  
-Harga beras di Jawa Timur cenderung stabil rendah sepanjang tahun 2020 hingga pertengahan 2022 di kisaran $\text{Rp}7.700\text{–Rp}9.000/\text{kg}$. Namun, mulai akhir 2022 hingga awal 2024 terjadi tren kenaikan struktural (*structural break*) yang tajam hingga mencapai titik puncak tertinggi sebesar $\text{Rp}14.450/\text{kg}$ pada akhir Februari 2024 menjelang bulan Ramadan, sebelum akhirnya terkoreksi dan stabil pada kisaran baru $\text{Rp}11.300\text{–Rp}13.450/\text{kg}$ pada periode 2024–2026.
+Harga beras di Jawa Timur cenderung stabil rendah sepanjang tahun 2020 hingga pertengahan 2022 di kisaran $\text{Rp}7.700\text{–Rp}9.000/\text{kg}$. Namun, mulai akhir 2022 hingga awal 2024 terjadi tren kenaikan struktural (*structural break*) yang tajam hingga mencapai titik puncak tertinggi sebesar $\text{Rp}14.450/\text{kg}$ pada akhir Februari 2024 akibat gangguan pasokan dan mundurnya masa panen raya (dampak El Niño), sebelum akhirnya terkoreksi dan stabil pada kisaran baru $\text{Rp}11.300\text{–Rp}13.450/\text{kg}$ pada periode 2024–2026.
 
 #### Visualisasi 2: Boxplot Distribusi Harga Beras per Tahun
 ![Boxplot Harga Beras per Tahun](assets/eda_2_boxplot_tahunan.png)
@@ -200,21 +200,14 @@ Sebaran harga antar tahun menunjukkan perubahan varians yang signifikan. Tahun 2
 ![Pola Musiman Harga Beras Bulanan](assets/eda_3_pola_musiman_bulanan.png)
 
 **Insight:**  
-Secara musiman, kenaikan harga beras konsisten terjadi pada kuartal pertama (Januari–Maret/April) yang bertepatan dengan periode pra-panen raya serta meningkatnya permintaan masyarakat menjelang bulan Ramadan dan Hari Raya Idul Fitri. Setelah melewati puncak periode Idul Fitri (April–Juni), harga cenderung melandai atau terkoreksi seiring masuknya masa panen raya di sentra produksi Jawa Timur.
+Secara musiman, kenaikan harga beras konsisten terjadi pada kuartal pertama (Januari–Maret) yang bertepatan dengan periode paceklik/pra-panen raya di sentra produksi padi. Setelah memasuki kuartal kedua (April–Juni), harga cenderung melandai atau terkoreksi seiring masuknya musim panen raya di Jawa Timur, lalu kembali merangkak naik secara bertahap pada paruh kedua tahun (Juli–Desember).
 
 ---
 
 ## 5. DATA PREPARATION  **[L]**
 
 ### 5.1 Data Cleaning
-**Aktivitas:**
-- Handling missing values
-- Removing duplicates
-- Handling outliers
-- Data type conversion
-**Contoh:**
 ```
-**[Jelaskan langkah-langkah data cleaning yang Anda lakukan]**
 Restrukturisasi Tabel (Unpivoting):
 - Kondisi awal: 7 berkas Excel berformat wide (tanggal sebagai kolom)
 - Strategi: Melakukan iterasi kolom tanggal pada setiap berkas dan menggabungkannya secara kronologis (long format)
@@ -230,18 +223,18 @@ Missing Values:
 Duplicate Data & Outliers:
 - Kondisi awal: Ditemukan 0 duplikat tanggal dan 0 outlier ekstrem berdasarkan uji IQR
 - Strategi: Tidak dilakukan penghapusan baris outlier
-- Alasan: Lonjakan harga pada awal tahun 2024 merupakan dinamika pasar nyata menjelang Idul Fitri yang justru harus dipelajari oleh model
+- Alasan: Lonjakan harga pada awal tahun 2024 merupakan dinamika pasar nyata yang harus dipelajari oleh model
 ```
 
 ### 5.2 Feature Engineering
 - **Pembuatan Fitur Autoregressive (*Lag Features*):** Membentuk fitur `lag_1`, `lag_3`, `lag_7`, `lag_14`, dan `lag_30` dari variabel target `harga_beras`, serta `lag_1_med1` dari `harga_beras_medium1`. Seluruh fitur menggunakan nilai masa lalu ($\ge t-1$) agar tidak terjadi *data leakage* saat memprediksi hari-$t$.
-- **Pembuatan Fitur Kalender & Musiman Idul Fitri:** Mengekstrak fitur `bulan` (1–12), `hari_dalam_minggu` (0–4), `hari_dalam_bulan` (1–31, untuk menangkap pola penyesuaian harga sekitar tanggal 25), serta fitur biner `is_periode_lebaran` (bernilai `1` pada rentang H-30 hingga H+7 tanggal Idul Fitri tahun 2020–2026, dan `0` di luar periode tersebut).
-- **Pembersihan Baris Awal (*Trimming*):** Menghapus 30 baris observasi paling awal (`2020-01-01` s.d. `2020-02-11`) yang mengandung nilai `NaN` akibat pergeseran `lag_30`, sehingga tersisa **1.753 baris** data bersih siap pakai.
+- **Pembuatan Fitur Kalender & Siklus Musiman:** Mengekstrak fitur `bulan` (1–12), `hari_dalam_minggu` (0–4), dan `hari_dalam_bulan` (1–31, untuk menangkap pola penyesuaian harga bulanan di sekitar tanggal 25).
+- **Pembersihan Baris Awal (*Trimming*):** Menghapus 30 baris observasi paling awal (`2020-01-01` s.d. `2020-02-11`) yang mengandung nilai `NaN` akibat pergeseran `lag_30`, sehingga tersisa **1.753 baris** data bersih siap pakai dengan total **12 fitur masukan**.
 
 ### 5.3 Data Transformation
 
 - **Lag Features & Rolling Statistics:** Selain *lag* harian, dihitung statistik bergerak (*rolling window*) berbasis `harga_beras.shift(1)` berupa rata-rata bergerak 7 hari (`rolling_mean_7`), standar deviasi 7 hari (`rolling_std_7`), dan rata-rata bergerak 30 hari (`rolling_mean_30`) untuk menangkap tren jangka pendek dan jangka menengah.
-- **Scaling (`MinMaxScaler`):** Seluruh 13 fitur numerik dan variabel target diskalakan ke rentang $[0, 1]$ menggunakan `MinMaxScaler`. Proses `fit()` dilakukan **secara eksklusif hanya pada data training** (`train_df`), kemudian parameternya diterapkan (`transform()`) pada `val_df` dan `test_df` untuk menjamin kestabilan konvergensi gradien pada model *Linear Regression* dan *Deep Learning* (LSTM) tanpa *data leakage*.
+- **Scaling (`MinMaxScaler`):** Seluruh 12 fitur numerik dan variabel target diskalakan ke rentang $[0, 1]$ menggunakan `MinMaxScaler`. Proses `fit()` dilakukan **secara eksklusif hanya pada data training** (`train_df`), kemudian parameternya diterapkan (`transform()`) pada `val_df` dan `test_df` untuk menjamin kestabilan konvergensi gradien pada model *Deep Learning* (LSTM) tanpa *data leakage*.
 - **Time Windows (Untuk Deep Learning):** Pada pemodelan sekuensial (LSTM), data tabular yang telah diskalakan akan dibentuk menjadi tensor 3 dimensi `(samples, time_steps, features)` dengan jendela waktu (*lookback window*) $T = 14$ hari kerja terakhir untuk memprediksi harga pada hari berikutnya.
 
 ### 5.4 Data Splitting
@@ -253,14 +246,9 @@ Duplicate Data & Outliers:
 - Test set: 15% (263 samples) -> periode 2025-10-22 s.d. 2026-10-30
 
 Karena dataset merupakan data deret waktu (*time series*), pembagian data dilakukan menggunakan **Chronological Split** secara berurutan tanpa pengacakan (`shuffle=False`). Pengacakan data pada *time series* akan menyebabkan kebocoran informasi masa depan ke masa lalu (*look-ahead bias*). Pembagian 70% : 15% : 15% memastikan bahwa:
-1. **Training set** mencakup 5 siklus penuh Ramadan/Idul Fitri (2020–2024) serta fase *structural break* kenaikan harga beras.
-2. **Validation set** mencakup siklus penuh Idul Fitri tahun 2025 untuk evaluasi model awal dan *hyperparameter tuning*.
-3. **Test set** mencakup siklus penuh Idul Fitri tahun 2026 dan disimpan terpisah (*untouched*) hingga tahap evaluasi akhir di Minggu 6.
-```
-
-> **Penting:** Test set hanya digunakan **sekali** pada tahap P (evaluasi akhir). Tuning pada tahap O hanya boleh memakai validation set / cross-validation. Fit scaler/encoder hanya pada data training untuk menghindari data leakage.
-
-**[Jelaskan strategi splitting Anda dan alasannya]**
+1. **Training set** mencakup dinamika jangka panjang tahun 2020–2024 termasuk fase pergeseran harga (*structural break*).
+2. **Validation set** mencakup satu siklus tahunan penuh (Oktober 2024 – Oktober 2025) untuk evaluasi model awal dan *hyperparameter tuning*.
+3. **Test set** mencakup satu siklus tahunan berikutnya (Oktober 2025 – Oktober 2026) dan disimpan terpisah (*untouched*) hingga tahap evaluasi akhir di Minggu 6.
 
 ### 5.5 Data Balancing
 Tidak dilakukan teknik *data balancing* (seperti SMOTE maupun *undersampling*) karena permasalahan ini merupakan tugas **regresi kontinu** (*time series forecasting*) untuk memprediksi besaran harga dalam Rupiah, bukan tugas klasifikasi yang memiliki ketidakseimbangan kelas kategorikal.
@@ -268,9 +256,9 @@ Tidak dilakukan teknik *data balancing* (seperti SMOTE maupun *undersampling*) k
 ### 5.6 Ringkasan Data Preparation
 
 1. **Apa yang dilakukan:**
-   Melakukan penggabungan 7 berkas Excel tahunan menjadi format *long table* kronologis, membersihkan pemisah koma ribuan menjadi `float64`, mengimputasi 1 nilai kosong dengan *forward fill*, membentuk 13 fitur rekayasa waktu (*lag*, *rolling statistics*, kalender, dan penanda periode Idul Fitri), membagi data secara kronologis (70% Train, 15% Validation, 15% Test), serta menormalisasi fitur ke rentang $[0, 1]$ menggunakan `MinMaxScaler`.
+   Melakukan penggabungan 7 berkas Excel tahunan menjadi format *long table* kronologis, membersihkan pemisah koma ribuan menjadi `float64`, mengimputasi 1 nilai kosong dengan *forward fill*, membentuk 12 fitur rekayasa waktu (*lag*, *rolling statistics*, dan fitur kalender), membagi data secara kronologis (70% Train, 15% Validation, 15% Test), serta menormalisasi fitur ke rentang $[0, 1]$ menggunakan `MinMaxScaler`.
 2. **Mengapa penting:**
-   Data mentah PIHPS berformat *wide* dan bertipe string sehingga tidak dapat langsung diproses oleh algoritma pembelajaran mesin. Pembuatan fitur *lag* dan *rolling window* memberikan konteks historis dan musiman Idul Fitri bagi model tabular, sementara *chronological split* dan *fitting scaler* eksklusif pada *training set* mencegah terjadinya *data leakage* agar evaluasi performa model benar-benar mencerminkan kondisi peramalan di dunia nyata.
+   Data mentah PIHPS berformat *wide* dan bertipe string sehingga tidak dapat langsung diproses oleh algoritma pembelajaran mesin. Pembuatan fitur *lag* dan *rolling window* memberikan konteks historis serta siklus musiman bulanan bagi model tabular, sementara *chronological split* dan *fitting scaler* eksklusif pada *training set* mencegah terjadinya *data leakage* agar evaluasi performa model benar-benar mencerminkan kondisi peramalan di dunia nyata.
 3. **Bagaimana implementasinya:**
    Seluruh pipeline diimplementasikan secara terstruktur dan *reproducible* menggunakan pustaka `pandas`, `numpy`, dan `scikit-learn` (`MinMaxScaler`) di dalam notebook `01_learning_problem_eda.ipynb` dan `02_data_preparation.ipynb`. Hasil akhir disimpan ke dalam berkas terpisah (`train.csv`, `val.csv`, `test.csv`, dan `scalers.pkl`) agar konsisten digunakan pada tahap pemodelan berikutnya.
 
